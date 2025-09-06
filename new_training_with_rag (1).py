@@ -6,8 +6,7 @@ Training Script
 This script fine-tunes Meta's Llama 3.1 8B model using QLoRA and creates a RAG system
 for enhanced product price prediction.
 
-Author: [Your Name]
-Date: 2025
+
 """
 
 import subprocess
@@ -279,4 +278,5 @@ def predict_price_rag(desc: str, k: int = 3) -> float:
 
 print("✅ Training and RAG setup completed successfully!")
 print(f"Model saved to: {HUB_MODEL_NAME}")
+
 print("ChromaDB index created at: ./chroma_train_index")
