@@ -7,15 +7,49 @@ A smart AI system that predicts product prices by combining a **fine-tuned Llama
 ![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-red.svg)
 ![Transformers](https://img.shields.io/badge/🤗%20Transformers-4.30+-yellow.svg)
 
-## 🎯 What This Does
+## Problem Statement
 
 Give it a product description like _"Apple iPhone 14 Pro 128GB"_ and it predicts the price: _"$999.99"_
 
-**How it works:**
+## Technical Architecture
 
-1. **Fine-tuned Model**: Llama 3.1 8B trained on product pricing data
-2. **RAG System**: Finds similar products to help make better predictions
-3. **Combined Power**: Uses both for more accurate price estimates
+### **1. Fine-tuned Language Model**
+
+- **Base Model**: Meta's Llama 3.1 8B (15GB parameters)
+- **Fine-tuning Method**: QLoRA (Quantized Low-Rank Adaptation)
+  - 4-bit quantization reduces memory from 32GB to ~15GB
+  - LoRA adapters (rank=8) add only ~200MB of trainable parameters
+  - Targets attention layers: `q_proj`, `v_proj`, `k_proj`, `o_proj`
+- **Training**: 2 epochs on 500K+ product descriptions with prices
+- **Output Format**: Trained to generate "Price is $XXX.XX"
+
+### **2. RAG (Retrieval-Augmented Generation) System**
+
+- **Vector Database**: ChromaDB with 500K+ product embeddings
+- **Embedding Model**: HuggingFace `all-MiniLM-L6-v2` (384-dimensional vectors)
+- **Similarity Search**: Cosine similarity to find top-k similar products
+- **Few-shot Prompting**: Uses 3 similar examples to guide prediction
+
+### **3. Hybrid Prediction Process**
+
+```
+Input: "Samsung Galaxy S23 Ultra 256GB"
+    ↓
+1. Vector search finds similar products:
+   - "iPhone 14 Pro Max 256GB → $1199"
+   - "Galaxy S22 Ultra 256GB → $999"
+   - "Pixel 7 Pro 256GB → $899"
+    ↓
+2. Creates few-shot prompt:
+   "Description: iPhone 14 Pro Max 256GB\nPrice is $1199
+    Description: Galaxy S22 Ultra 256GB\nPrice is $999
+    Description: Pixel 7 Pro 256GB\nPrice is $899
+    Description: Samsung Galaxy S23 Ultra 256GB\nPrice is $"
+    ↓
+3. Fine-tuned model completes: "1099"
+```
+
+**Result**: Context-aware pricing that leverages both learned patterns and similar product examples
 
 ## 🚀 Quick Start
 
@@ -24,6 +58,8 @@ Give it a product description like _"Apple iPhone 14 Pro 128GB"_ and it predicts
 1. Upload the Python files to Google Colab
 2. Enable GPU (Runtime → Change runtime type → GPU)
 3. Run the testing script to see results!
+
+![sammple_setup](https://github.com/user-attachments/assets/6db6740f-11f6-455a-98db-ec3d7b48fc75)
 
 ### Option 2: Local Setup
 
@@ -53,16 +89,11 @@ python testing_fine_tuned_model_with_rag.py
 
 ## 📊 Results
 
-_[Space for your results when you run it]_
+
 
 ### Sample Output:
 
-```
-1: Guess: $999.99 Truth: $999.00 Error: $0.99 Item: iPhone 14 Pro...
-2: Guess: $249.99 Truth: $249.00 Error: $0.99 Item: AirPods Pro...
-...
-Average Error: $23.45 RMSLE: 0.15 Hit Rate: 78.5%
-```
+![output](https://github.com/user-attachments/assets/794b634b-312f-46e8-9086-b6fdf1f8b817)
 
 ### Performance Chart:
 
