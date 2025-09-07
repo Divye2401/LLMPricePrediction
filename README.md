@@ -1,5 +1,5 @@
 # LLMPricePrediction
-# 🤖 Product Price Prediction with Fine-tuned LLM + RAG
+# Product Price Prediction with Fine-tuned LLM + RAG
 
 A smart AI system that predicts product prices by combining a **fine-tuned Llama 3.1 model** with **RAG (Retrieval-Augmented Generation)**.
 
