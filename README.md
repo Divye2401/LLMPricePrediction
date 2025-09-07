@@ -97,7 +97,7 @@ python testing_fine_tuned_model_with_rag.py
 
 ### Performance Chart:
 
-_[Your scatter plot will appear here]_
+![chart](https://github.com/user-attachments/assets/bffc83ac-b739-446b-bf75-61b2e968b165)
 
 ## 🧠 How It Works
 
