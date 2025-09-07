@@ -124,11 +124,6 @@ predicted_price = predict_price_rag(description)
 print(f"Predicted price: ${predicted_price:.2f}")
 ```
 
-
-
-**Performance Chart:**
-_[Upload your generated chart image here]_
-
 ## 🤝 Contributing
 
 Feel free to:
